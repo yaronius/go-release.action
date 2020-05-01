@@ -17,6 +17,4 @@ if [ $GOOS == 'windows' ]; then
   EXT='.exe'
 fi
 
-
 go build -o ./builds/server${EXT} ./main.go
-go build -o ./builds/artisan${EXT} ./artisan.go
