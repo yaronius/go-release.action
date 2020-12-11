@@ -16,16 +16,16 @@ rmdir $PROJECT_ROOT
 ln -s $GITHUB_WORKSPACE $PROJECT_ROOT
 cd $PROJECT_ROOT
 go mod download
-go build -o ./builds/${BINARY_NAME}${EXT} ./${GOFILE_PATH}
+go build -o ./${BINARY_NAME}${EXT} ./${GOFILE_PATH}
 
 EVENT_DATA=$(cat $GITHUB_EVENT_PATH)
 echo $EVENT_DATA | jq .
 UPLOAD_URL=$(echo $EVENT_DATA | jq -r .release.upload_url)
 UPLOAD_URL=${UPLOAD_URL/\{?name,label\}/}
 RELEASE_NAME=$(echo $EVENT_DATA | jq -r .release.tag_name)
-NAME="${PROJECT_NAME}_${RELEASE_NAME}_${GOOS}_${GOARCH}"
+NAME="${BINARY_NAME}_${RELEASE_NAME}_${GOOS}_${GOARCH}"
 
-tar cvfz tmp.tgz "./builds/${BINARY_NAME}${EXT}"
+tar cvfz tmp.tgz "./${BINARY_NAME}${EXT}"
 CHECKSUM=$(md5sum tmp.tgz | cut -d ' ' -f 1)
 
 curl \
