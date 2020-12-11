@@ -2,24 +2,30 @@
 
 set -eux
 
-/build.sh
+PROJECT_ROOT="/go/src/github.com/${GITHUB_REPOSITORY}"
+PROJECT_NAME=$(basename $GITHUB_REPOSITORY)
+BINARY_NAME=${BINARY_NAME:-$PROJECT_NAME}
+GOFILE_PATH=${GOFILE_PATH:-main.go}
+EXT=''
+if [ $GOOS == 'windows' ]; then
+  EXT='.exe'
+fi
+
+mkdir -p $PROJECT_ROOT
+rmdir $PROJECT_ROOT
+ln -s $GITHUB_WORKSPACE $PROJECT_ROOT
+cd $PROJECT_ROOT
+go mod download
+go build -o ./${BINARY_NAME}${EXT} ./${GOFILE_PATH}
 
 EVENT_DATA=$(cat $GITHUB_EVENT_PATH)
 echo $EVENT_DATA | jq .
 UPLOAD_URL=$(echo $EVENT_DATA | jq -r .release.upload_url)
 UPLOAD_URL=${UPLOAD_URL/\{?name,label\}/}
 RELEASE_NAME=$(echo $EVENT_DATA | jq -r .release.tag_name)
-PROJECT_NAME=$(basename $GITHUB_REPOSITORY)
-NAME="${PROJECT_NAME}_${RELEASE_NAME}_${GOOS}_${GOARCH}"
-SERVER_NAME="server"
+NAME="${BINARY_NAME}_${RELEASE_NAME}_${GOOS}_${GOARCH}"
 
-EXT=''
-
-if [ $GOOS == 'windows' ]; then
-  EXT='.exe'
-fi
-
-tar cvfz tmp.tgz "./builds/${SERVER_NAME}${EXT}"
+tar cvfz tmp.tgz "./${BINARY_NAME}${EXT}"
 CHECKSUM=$(md5sum tmp.tgz | cut -d ' ' -f 1)
 
 curl \
