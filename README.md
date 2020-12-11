@@ -1,6 +1,6 @@
-# Totoval Release Binary GitHub Action
+# Release Binary GitHub Action
 
-Automate publishing Totoval build artifacts for GitHub releases through GitHub Actions
+Automate publishing build artifacts for GitHub releases through GitHub Actions
 
 ```yaml
 # .github/workflows/release.yaml
@@ -10,73 +10,43 @@ on:
     types: [published]
 name: Build
 jobs:
-  release-linux-386:
-    name: release linux/386
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: compile and release
-      uses: totoval/go-release.action@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GOARCH: "386"
-        GOOS: linux
   release-linux-amd64:
     name: release linux/amd64
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: compile and release
-      uses: totoval/go-release.action@v1.0.0
+      uses: yaronius/go-release.action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GOARCH: amd64
         GOOS: linux
-  release-darwin-386:
-    name: release darwin/386
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: compile and release
-      uses: totoval/go-release.action@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GOARCH: "386"
-        GOOS: darwin
+        BINARY_NAME: my-cool-app # custom name for your binary, project name by default
   release-darwin-amd64:
     name: release darwin/amd64
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: compile and release
-      uses: totoval/go-release.action@v1.0.0
+      uses: yaronius/go-release.action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GOARCH: amd64
         GOOS: darwin
-  release-windows-386:
-    name: release windows/386
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: compile and release
-      uses: totoval/go-release.action@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GOARCH: "386"
-        GOOS: windows
+        BINARY_NAME: my-cool-app # custom name for your binary, project name by default
   release-windows-amd64:
     name: release windows/amd64
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - name: compile and release
-      uses: totoval/go-release.action@v1.0.0
+      uses: yaronius/go-release.action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GOARCH: amd64
         GOOS: windows
+        BINARY_NAME: my-cool-app # custom name for your binary, project name by default
 ```
 
 ## Thanks
-* `ngs/go-release.action`
+* `totoval/go-release.action`
